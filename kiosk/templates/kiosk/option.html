@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Options</title>
+</head>
+<body>
+    <h1>Menu Options</h1>
+    <h2>{{ menu.name }}</h2>
+    <ul>
+        {% for option in options %}
+            <li>{{ option.option }}</li>
+            <ul>
+                {% for content in option.contents.all %}
+                    <li>{{ content.content }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </ul>
+</body>
+</html>

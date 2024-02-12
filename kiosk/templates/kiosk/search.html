@@ -1,0 +1,31 @@
+{% extends 'kiosk/base.html' %}
+{% load static %}
+
+{% block main_area %}
+
+    <style>
+
+         body {
+            background-color: rgb(237, 237, 237);
+        }
+
+
+        .buttonMic {
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            position: relative;
+            left: 50px; /* 원하는 위치로 조정 */
+            top: 20px; /* 원하는 위치로 조정 */
+            width: 100px; /* 원하는 크기로 조정 */
+            height: 40px; /* 원하는 크기로 조정 */
+        }
+    </style>
+    <h1>주문하고 싶은 메뉴를 말해주세요.</h1>
+    <!-- 여기에 본문 내용 추가 -->
+
+    <button class="buttonMic">
+        <img src="{% static 'micButton.svg' %}" alt="음성인식하기">
+    </button>
+{% endblock %}

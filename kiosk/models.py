@@ -18,6 +18,7 @@ class Menu(models.Model):
     menuImgUrl = models.TextField(null=True, blank=True)
     status = models.IntegerField(max_length=1, default=1)
 
+
     def __str__(self):
         return f'{self.name}'
 
@@ -29,6 +30,8 @@ class Option(models.Model):
     price = models.IntegerField()
     quantity = models.IntegerField(max_length=5, default=1)
     status = models.IntegerField(max_length=1, default=1)
+
+    #menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.option}'

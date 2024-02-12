@@ -1,0 +1,61 @@
+{% extends 'kiosk/base.html' %}
+{% load static %}
+
+{% block main_area %}
+    <div>
+        <!-- 카테고리 버튼들 -->
+        {% for category in categories %}
+            <button class="category-button" data-category="{{ category }}">{{ category }}</button>
+        {% endfor %}
+
+        <!-- 모든 메뉴 목록 -->
+        <div id="menu-list">
+            {% for menu in menus %}
+                <button class="menu-item" data-category="{{ menu.category }}" data-menu-id="{{ menu.menuId }}">{{ menu.name }}</button>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstCategory = "{{ first_category }}"; // 첫 번째 카테고리 가져오기
+            const categoryButtons = document.querySelectorAll('.category-button');
+            const menuItems = document.querySelectorAll('.menu-item');
+
+            // 모든 메뉴 아이템을 숨김
+            menuItems.forEach(item => {
+                item.style.display = 'none';
+            });
+
+            // 첫 번째 카테고리에 해당하는 메뉴 아이템을 표시
+            const firstCategoryMenus = document.querySelectorAll('.menu-item[data-category="' + firstCategory + '"]');
+            firstCategoryMenus.forEach(item => {
+                item.style.display = 'block';
+            });
+
+            // 카테고리 버튼을 클릭할 때 실행되는 함수
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const category = button.dataset.category;
+                    // 해당 카테고리의 메뉴만 표시
+                    menuItems.forEach(item => {
+                        if (item.dataset.category === category) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            menuItems.forEach(menuButton => {
+                menuButton.addEventListener('click', () => {
+                    const menuId = menuButton.dataset.menuId;
+                    window.location.href = `/menu/${menuId}/options/`;
+                });
+            });
+        });
+    </script>
+
+{% endblock %}
