@@ -16,7 +16,7 @@ class Menu(models.Model):
     optionId = models.ManyToManyField('Option')
     price = models.IntegerField()
     menuImgUrl = models.TextField(null=True, blank=True)
-    status = models.IntegerField(max_length=1, default=1)
+    status = models.IntegerField(default=1)
 
     def __str__(self):
         return f'{self.name}'
@@ -25,10 +25,10 @@ class Option(models.Model):
     optionId = models.BigAutoField(primary_key=True)
     #menuId = models.ForeignKey(Menu, on_delete=models.CASCADE)
     option = models.CharField(max_length=255)
-    contents = models.ManyToManyField('OptionContent', null=True, blank=True)
+    contents = models.ManyToManyField('OptionContent', blank=True)
     price = models.IntegerField()
-    quantity = models.IntegerField(max_length=5, default=1)
-    status = models.IntegerField(max_length=1, default=1)
+    quantity = models.IntegerField(default=1)
+    status = models.IntegerField(default=1)
 
     def __str__(self):
         return f'{self.option}'
@@ -42,16 +42,24 @@ class OptionContent(models.Model):
 class Cart(models.Model):
     cartId = models.BigAutoField(primary_key=True)
     menuId = models.ForeignKey(Menu, on_delete=models.CASCADE)
-    optionId = models.ForeignKey(Option, on_delete=models.CASCADE)
-    type = models.IntegerField(max_length=1)
+    options =  models.TextField(null=True, blank=True)
+    price = models.IntegerField()
+    # quantity = models.IntegerField(default=1)
+    type = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.menuId.name}'
 
 class Order(models.Model):
     orderId = models.BigAutoField(primary_key=True)
-    menuId = models.ForeignKey(Menu, on_delete=models.CASCADE)
-    optionId = models.ForeignKey(Option, on_delete=models.CASCADE)
+    menuId = models.ManyToManyField('Menu', blank=True)
+    options =  models.TextField(null=True, blank=True)
     pay = models.CharField(max_length=255)
     totalPrice = models.IntegerField()
     totalQuantity = models.IntegerField()
-    date = models.DateTimeField(auto_now_add = True)
+    date = models.DateField(auto_now_add = True)
+
+    def __str__(self):
+        return f'[{self.pk}]'
 
     
