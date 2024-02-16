@@ -2,16 +2,25 @@
 {% load static %}
 
 {% block main_area %}
-    <div>
+    <div class="menu_background">
+        <div id="categoryList">
         <!-- 카테고리 버튼들 -->
         {% for category in categories %}
             <button class="category-button" data-category="{{ category }}">{{ category }}</button>
         {% endfor %}
+        </div>
 
         <!-- 모든 메뉴 목록 -->
         <div id="menu-list">
             {% for menu in menus %}
-                <button class="menu-item" data-category="{{ menu.category }}" data-menu-id="{{ menu.menuId }}">{{ menu.name }}</button>
+                <button class="menu-item" data-category="{{ menu.category }}" data-menu-id="{{ menu.menuId }}">
+
+                    <img src="{% static 'americanoImg.png' %}" alt="dddd">
+                    <br/>
+                    {{ menu.name }}
+
+                    <p class="priceText">{{ menu.price }}</p>
+                </button>
             {% endfor %}
         </div>
     </div>
@@ -52,10 +61,62 @@
             menuItems.forEach(menuButton => {
                 menuButton.addEventListener('click', () => {
                     const menuId = menuButton.dataset.menuId;
-                    window.location.href = `/menu/${menuId}/options/`;
+                    window.location.href = `/menu/${menuId}/`;
                 });
             });
+
+
+
         });
     </script>
+
+    <style>
+
+        #categoryList {
+            display: flex;
+            justify-content: space-around; /* 카테고리 버튼들을 가로로 균등하게 배치 */
+            align-items: center; /* 카테고리 버튼들을 수직 가운데 정렬 */
+            padding: 10px 0; /* 상하 여백 조절 */
+            background-color: rgb(256,256,256);
+            width: 100vw;
+        }
+
+        .category-button {
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            font-size: 16px;
+        }
+
+        .category-button:focus {
+            border-bottom: 2px solid blue;
+            outline: none;
+
+        }
+
+        .priceText {
+            color: red;
+            margin-top: 3px;
+        }
+
+
+        #menu-list {
+           /* margin-top: 20px;  카테고리 리스트와의 간격 조절 */
+           display: flex; /* 가로 방향으로 요소들을 배치 */
+            flex-wrap: wrap; /* 요소들이 넘칠 경우 다음 줄로 넘어가도록 설정 */
+            justify-content: left;
+        }
+
+        .menu-item {
+            margin: 10px;
+            cursor: pointer;
+            background-color: white;
+            border: none;
+            border-radius: 10px;
+            width: 100px;
+            height: 119px;
+        }
+    </style>
 
 {% endblock %}

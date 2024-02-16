@@ -7,15 +7,16 @@
 <body>
     <h1>Menu Options</h1>
     <h2>{{ menu.name }}</h2>
+<!--
     <ul>
         {% for option in options %}
-            <li>{{ option.option }}</li>
-            <ul>
-                {% for content in option.contents.all %}
-                    <li>{{ content.content }}</li>
-                {% endfor %}
-            </ul>
+            <li>{{ option.option }} - Price: {{ option.price }}</li>
         {% endfor %}
+    </ul>
+-->
+    <ul>
+        {% for m in menus %}
+            <li>{{ m.menuId.name }} 옵션: {{ m.option }}</li>
     </ul>
 </body>
 </html>

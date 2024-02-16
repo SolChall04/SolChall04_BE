@@ -17,7 +17,7 @@ class Menu(models.Model):
     price = models.IntegerField()
     menuImgUrl = models.TextField(null=True, blank=True)
     status = models.IntegerField(max_length=1, default=1)
-
+    #options = models.ManyToManyField('Option', through='MenuOption', related_name='menus')
 
     def __str__(self):
         return f'{self.name}'
@@ -32,6 +32,7 @@ class Option(models.Model):
     status = models.IntegerField(max_length=1, default=1)
 
     #menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    #menu_option = models.ManyToManyField(Menu)
 
     def __str__(self):
         return f'{self.option}'
@@ -57,4 +58,6 @@ class Order(models.Model):
     totalQuantity = models.IntegerField()
     date = models.DateTimeField(auto_now_add = True)
 
-    
+# class MenuOption(models.Model):
+#     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+#     option = models.ForeignKey(Option, on_delete=models.CASCADE)

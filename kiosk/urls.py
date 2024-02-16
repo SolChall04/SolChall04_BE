@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import menu_options
+#from .views import menu_options
 
 
 urlpatterns = [
@@ -8,5 +8,7 @@ urlpatterns = [
     path('search_or_browse/', views.search_or_browse, name='search_or_browse'),
     path('search/', views.search, name='search'),
     path('menu/', views.menu, name='menu'),
-    path('menu/<int:menu_id>/options/', menu_options, name='menu_options'),
+    #path('menu/<int:menu_id>/options/', menu_options, name='menu_options'),
+    #path('menu/<int:menu_id>/options/', views.menu_options, name='menu_options'),
+    path('menu/<int:menu_id>/', views.menu, name='menu_detail'),
 ]

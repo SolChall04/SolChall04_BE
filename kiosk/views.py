@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Menu
+from .models import Menu, Option
 from django.db.models import Min
+from django.http import JsonResponse
 
 # Create your views here.
 def landing(request):
@@ -26,11 +27,34 @@ def menu(request):
     # menu.html 템플릿에 카테고리 목록과 메뉴 목록을 전달합니다.
     #return render(request, 'kiosk/menu.html', {'categories': categories, 'menus': menus})
 
+    # 메뉴에 대한 옵션을 가져옵니다.
+
+
     return render(request, 'kiosk/menu.html',
                   {'categories': categories, 'menus': menus, 'first_category': first_category})
 
 
-def menu_options(request, menu_id):
-    menu = Menu.objects.get(pk=menu_id)
-    options = menu.option_set.all()
-    return render(request, 'kiosk/option.html', {'menu': menu, 'options': options})
+# def menu_options(request, menu_id):
+#     menu = Menu.objects.get(pk=menu_id)
+#     #menu = Menu.objects.get(menuId=1)
+#     #options = menu.option_set.all()
+#     options = menu.options.all()  # MenuOption을 통해 연결된 Option 객체들을 가져옴
+#     return render(request, 'kiosk/option.html', {'menu': menu, 'options': options})
+#     #return render(request, 'kiosk/option.html', {'options': options})
+#     # 옵션 데이터를 JSON 형식으로 응답
+#     #return JsonResponse({'options': list(options.values('option'))})
+
+# def menu_options(request, menu_id):
+#     # Retrieve the menu item based on the menu ID
+#     menu = Menu.objects.get(pk=menu_id)
+#     # Retrieve the options associated with the menu item
+#     #options = menu.option_set.all()
+#     options = menu.options.all()
+#     return render(request, 'kiosk/option.html', {'menu': menu, 'options': options})
+
+# def menu_options(request, menu_id):
+#     # Retrieve the menu item based on the menu ID
+#     menu = Menu.objects.get(pk=menu_id)
+#     # Retrieve the options associated with the menu item
+#     options = menu.option_set.all()
+#     return render(request, 'kiosk/option.html', {'menu': menu, 'options': options})

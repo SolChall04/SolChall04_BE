@@ -1,0 +1,8 @@
+#category-buttons {
+    margin-bottom: 20px; /* 메뉴 아이템과의 간격 설정 */
+}
+
+.menu-item {
+    display: block;
+    margin-bottom: 10px; /* 메뉴 아이템 사이의 간격 설정 */
+}
