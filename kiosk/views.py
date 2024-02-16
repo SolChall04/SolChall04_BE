@@ -3,6 +3,9 @@ from django.http import HttpResponse
 from .models import Menu, Option
 from django.db.models import Min
 from django.http import JsonResponse
+from .models import Store, Menu, Option, OptionContent, Cart, Order
+from django.db.models import Sum
+
 
 # Create your views here.
 def landing(request):
@@ -33,28 +36,40 @@ def menu(request):
     return render(request, 'kiosk/menu.html',
                   {'categories': categories, 'menus': menus, 'first_category': first_category})
 
+def cart(request):
+    carts = Cart.objects.all()
 
-# def menu_options(request, menu_id):
-#     menu = Menu.objects.get(pk=menu_id)
-#     #menu = Menu.objects.get(menuId=1)
-#     #options = menu.option_set.all()
-#     options = menu.options.all()  # MenuOption을 통해 연결된 Option 객체들을 가져옴
-#     return render(request, 'kiosk/option.html', {'menu': menu, 'options': options})
-#     #return render(request, 'kiosk/option.html', {'options': options})
-#     # 옵션 데이터를 JSON 형식으로 응답
-#     #return JsonResponse({'options': list(options.values('option'))})
 
-# def menu_options(request, menu_id):
-#     # Retrieve the menu item based on the menu ID
-#     menu = Menu.objects.get(pk=menu_id)
-#     # Retrieve the options associated with the menu item
-#     #options = menu.option_set.all()
-#     options = menu.options.all()
-#     return render(request, 'kiosk/option.html', {'menu': menu, 'options': options})
+    total_quantity = len(carts)
+    total_price = Cart.objects.aggregate(total_price=Sum('price'))['total_price']
 
-# def menu_options(request, menu_id):
-#     # Retrieve the menu item based on the menu ID
-#     menu = Menu.objects.get(pk=menu_id)
-#     # Retrieve the options associated with the menu item
-#     options = menu.option_set.all()
-#     return render(request, 'kiosk/option.html', {'menu': menu, 'options': options})
+    return render(
+    request,
+    'kiosk/cart.html',
+    {
+        'carts': carts,
+        'total_quantity': total_quantity,
+        'total_price' : total_price
+    }
+)
+
+def pay(request):
+
+    return render(
+    request,
+    'kiosk/pay.html',
+    {
+
+    }
+)
+
+def success(request):
+    latest_order = Order.objects.all().order_by('-pk').first()
+
+    return render(
+    request,
+    'kiosk/order_success.html',
+    {
+        'latest_order' : latest_order
+    }
+)
