@@ -7,4 +7,8 @@ urlpatterns = [
     path('cart/', views.cart),
     path('success/', views.success),
     path('pay/', views.pay, name='pay'),
+
+
+    # AJAX
+    path('cart/del/', views.delete),
 ]
