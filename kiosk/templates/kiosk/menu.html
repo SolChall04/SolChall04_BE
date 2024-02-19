@@ -15,7 +15,7 @@
             {% for menu in menus %}
                 <button class="menu-item" data-category="{{ menu.category }}" data-menu-id="{{ menu.menuId }}">
 
-                    <img src="{% static 'americanoImg.png' %}" alt="dddd">
+                    <img src="{% static 'americanoImg.png' %}" alt="imageAmericano">
                     <br/>
                     {{ menu.name }}
 
@@ -24,6 +24,16 @@
             {% endfor %}
         </div>
     </div>
+    <!-- 페이지 번호 표시 -->
+    <div class="menuPagination">
+         {% if menus.has_previous %}
+            <a href="?page={{ menus.previous_page_number }}">이전 페이지</a>
+        {% endif %}
+        <span class="current">{{ menus.number }} / {{ menus.paginator.num_pages }}</span>
+        {% if menus.has_next %}
+            <a href="?page={{ menus.next_page_number }}">다음 페이지</a>
+        {% endif %}
+</div>
 
 
     <script>
@@ -71,14 +81,17 @@
     </script>
 
     <style>
+        .menu_background {
+
+        }
 
         #categoryList {
             display: flex;
             justify-content: space-around; /* 카테고리 버튼들을 가로로 균등하게 배치 */
-            align-items: center; /* 카테고리 버튼들을 수직 가운데 정렬 */
+            align-items: center;  /*카테고리 버튼들을 수직 가운데 정렬 */
             padding: 10px 0; /* 상하 여백 조절 */
             background-color: rgb(256,256,256);
-            width: 100vw;
+            width: 100%;
         }
 
         .category-button {
@@ -116,6 +129,15 @@
             border-radius: 10px;
             width: 100px;
             height: 119px;
+        }
+
+        .menuPagination {
+            background-color:white;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            margin-top: 10px;
         }
     </style>
 

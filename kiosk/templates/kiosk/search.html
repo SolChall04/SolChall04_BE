@@ -15,15 +15,22 @@
             background-color: transparent;
             border: none;
             padding: 0;
-            position: relative;
-            left: 50px; /* 원하는 위치로 조정 */
-            top: 20px; /* 원하는 위치로 조정 */
+            position: fixed;
+            left: calc(50% - 50px); /* 가로 가운데 정렬 */
             width: 100px; /* 원하는 크기로 조정 */
             height: 40px; /* 원하는 크기로 조정 */
         }
+
+        .searchTxt{
+            font-size:32px;
+            font-weight:bold;
+            text-align:center;
+            margin-top:25%;
+        }
     </style>
-    <h1>주문하고 싶은 메뉴를 말해주세요.</h1>
-    <!-- 여기에 본문 내용 추가 -->
+    <p class="searchTxt">주문하고 싶은 <br/>
+    메뉴를 말해주세요</p>
+
 
     <button class="buttonMic">
         <img src="{% static 'micButton.svg' %}" alt="음성인식하기">

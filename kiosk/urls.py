@@ -13,5 +13,6 @@ urlpatterns = [
     path('menu/', views.menu, name='menu'),
     #path('menu/<int:menu_id>/options/', menu_options, name='menu_options'),
     #path('menu/<int:menu_id>/options/', views.menu_options, name='menu_options'),
-    path('menu/<int:menu_id>/', views.menu, name='menu_detail'),
+    path('menu/<int:menu_id>/', views.menu_options, name='menu_detail'),
+    path('add_to_cart/', views.add_to_cart, name='add_to_cart'),
 ]
