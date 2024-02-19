@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from .models import Store, Menu, Option, OptionContent, Cart, Order
+from .models import Store, Menu, Option, OptionContent, Cart, Order, Category
 from django.db.models import Sum
 from django.http import JsonResponse
 
@@ -70,16 +70,45 @@ def delete(request):
 
 
 
-# 총 수량 계산 및 전송하는 함수
-def cal_totalQuantity(t) :
-    
-    carts = Cart.objects.all()
+# test
+def login(request):
 
-    t = len(carts)
-    return t
+    return render(
+    request,
+    'kiosk/login.html',
+    {
+    }
+)
 
-# 총 가격 계산 및 전송하는 함수
-def cal_totalPrice(p) :
+def signup(request):
 
-    p = Cart.objects.aggregate(total_price=Sum('price'))['total_price']
-    return p
+    return render(
+    request,
+    'kiosk/sign_up.html',
+    {
+    }
+)
+
+def menu(request):
+    categorys = Category.objects.all()
+    menus = Menu.objects.all()
+
+    return render(
+    request,
+    'kiosk/menu.html',
+    {
+        'categorys' : categorys,
+        'menus' : menus
+    }
+)
+
+def add(request):
+    categorys = Category.objects.all()
+
+    return render(
+    request,
+    'kiosk/add_menu.html',
+    {
+        'categorys' : categorys,
+    }
+)
