@@ -52,7 +52,7 @@ class Cart(models.Model):
     options =  models.TextField(null=True, blank=True)
     price = models.IntegerField()
     # quantity = models.IntegerField(default=1)
-    type = models.IntegerField()
+    type = models.IntegerField(default=1)
 
     def __str__(self):
         return f'{self.menuId.name}'
