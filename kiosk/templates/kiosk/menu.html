@@ -13,7 +13,7 @@
             <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">전체</button>
         </li>
 
-        {% for c in categorys %}
+        {% for c in categories %}
         <!-- 사용자 정의 카테고리 -->
         <!-- 문제 ==> 기호가 껴 있으면 카테고리 id를 끝까지 인식 못해 카테고리에 맞는 메뉴 출력이 안됨 -->
         <li class="nav-item" role="presentation">
@@ -31,13 +31,13 @@
     <div class="tab-content" id="myTabContent">
 
         <!-- 전체 탭 메뉴 버튼 -->
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="tab-pane show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <ul class="cardUl">
             {% for m in menus %}
             <a href="{% url 'cart' %}" id="mod_menu_url">
                 <div class="card text-center" style="width: 113px;">
                     <div class="img">
-                        <img src="{% static 'kiosk/img/ex1.jpg' %}" class="card-img-top" alt="menu_img" id="menu_img">
+                        <img src="{% static 'americanoImg.png' %}" class="card-img-top" alt="menu_img" id="menu_img">
                     </div>
                     <div class="card-body">
                         <p class="card-text">{{ m.name }}</p>
@@ -62,15 +62,15 @@
         </div>
         
         <!-- 사용자정의 탭 메뉴 버튼 -->
-        {% for c in categorys %}
-            <div class="tab-pane fade" id="{{ c.name }}" role="tabpanel" aria-labelledby="{{ c.name }}-tab">
+        {% for c in categories %}
+            <div class="tab-pane" id="{{ c.name }}" role="tabpanel" aria-labelledby="{{ c.name }}-tab">
                 <ul class="cardUl">
                 {% for m in menus %}
                     {% if m.categoryId == c %}
                         <a href="{% url 'cart' %}" id="mod_menu_url">
                             <div class="card text-center" style="width: 113px;">
                                 <div class="img">
-                                    <img src="{% static 'kiosk/img/ex1.jpg' %}" class="card-img-top" alt="menu_img" id="menu_img">
+                                    <img src="{% static 'americanoImg.png' %}" class="card-img-top" alt="menu_img" id="menu_img">
                                 </div>
                                 <div class="card-body">
                                     <p class="card-text">{{ m.name }}</p>

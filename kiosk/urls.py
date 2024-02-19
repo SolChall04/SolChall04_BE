@@ -12,7 +12,7 @@ urlpatterns = [
     # test
     path('login/', views.login),
     path('signup/', views.signup),
-    path('admin_menu/', views.admin_menu),
+    path('menu/', views.admin_menu),
     path('menu/add', views.add),
 
 
@@ -24,7 +24,7 @@ urlpatterns = [
     path('', views.landing),
     path('search_or_browse/', views.search_or_browse, name='search_or_browse'),
     path('search/', views.search, name='search'),
-    path('menu/', views.menu, name='menu'),
+    path('browse/', views.browse, name='browse'),
     #path('menu/<int:menu_id>/options/', menu_options, name='menu_options'),
     #path('menu/<int:menu_id>/options/', views.menu_options, name='menu_options'),
     path('menu/<int:menu_id>/', views.menu_options, name='menu_detail'),
