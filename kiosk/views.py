@@ -66,10 +66,12 @@ def convert_speech_to_text(request):
         audio_text = request.POST.get('audio_text')
 
         # JSON 파일의 경로 설정
-        json_file_path = os.path.join(settings.BASE_DIR, 'kiosk', 'solutionproject-414810-6aa45c89e5cc.json')
+        #json_file_path = os.path.join(settings.BASE_DIR, 'kiosk', 'solutionproject-414810-6aa45c89e5cc.json')
+        credentials_path = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 
         # Google STT API 인증 정보
-        credentials = service_account.Credentials.from_service_account_file(json_file_path)
+        #credentials = service_account.Credentials.from_service_account_file(json_file_path)
+        credentials = service_account.Credentials.from_service_account_file(credentials_path)
 
 
         # Google STT 클라이언트 생성

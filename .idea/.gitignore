@@ -1,7 +1,4 @@
-# Created by https://www.toptal.com/developers/gitignore/api/django
-# Edit at https://www.toptal.com/developers/gitignore?templates=django
 
-### Django ###
 *.log
 *.pot
 *.pyc
@@ -12,7 +9,6 @@ db.sqlite3-journal
 media
 secrets.json
 *secrets.json
-
 
 # Created by https://www.toptal.com/developers/gitignore/api/pycharm
 # Edit at https://www.toptal.com/developers/gitignore?templates=pycharm
@@ -130,3 +126,4 @@ fabric.properties
 # https://plugins.jetbrains.com/plugin/8053-azure-toolkit-for-intellij
 .idea/**/azureSettings.xml
 
+# End of https://www.toptal.com/developers/gitignore/api/pycharm
