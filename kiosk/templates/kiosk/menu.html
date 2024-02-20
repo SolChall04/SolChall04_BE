@@ -1,144 +1,105 @@
 {% extends 'kiosk/base.html' %}
-{% load static %}
-
 {% block main_area %}
-    <div class="menu_background">
-        <div id="categoryList">
-        <!-- 카테고리 버튼들 -->
-        {% for category in categories %}
-            <button class="category-button" data-category="{{ category }}">{{ category }}</button>
+{% load static %}
+<link href="{% static 'kiosk/css/menu.css' %}" rel="stylesheet" type="text/css">
+
+
+<!-- 카테고리바 -->
+<div class="custom-tabs-container">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+        <!-- 전체 -->
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">전체</button>
+        </li>
+
+        {% for c in categories %}
+        <!-- 사용자 정의 카테고리 -->
+        <!-- 문제 ==> 기호가 껴 있으면 카테고리 id를 끝까지 인식 못해 카테고리에 맞는 메뉴 출력이 안됨 -->
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="{{ c.name }}-tab" data-bs-toggle="tab" data-bs-target="#{{ c.name }}" type="button" role="tab" aria-controls="{{ c.name }}" aria-selected="false">{{ c.name }}</button>
+        </li>
         {% endfor %}
-        </div>
+    
 
-        <!-- 모든 메뉴 목록 -->
-        <div id="menu-list">
-            {% for menu in menus %}
-                <button class="menu-item" data-category="{{ menu.category }}" data-menu-id="{{ menu.menuId }}">
-
-                    <img src="{% static 'americanoImg.png' %}" alt="imageAmericano">
-                    <br/>
-                    {{ menu.name }}
-
-                    <p class="priceText">{{ menu.price }}</p>
-                </button>
-            {% endfor %}
-        </div>
-    </div>
-    <!-- 페이지 번호 표시 -->
-    <div class="menuPagination">
-         {% if menus.has_previous %}
-            <a href="?page={{ menus.previous_page_number }}">이전 페이지</a>
-        {% endif %}
-        <span class="current">{{ menus.number }} / {{ menus.paginator.num_pages }}</span>
-        {% if menus.has_next %}
-            <a href="?page={{ menus.next_page_number }}">다음 페이지</a>
-        {% endif %}
+    </ul>
 </div>
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const firstCategory = "{{ first_category }}"; // 첫 번째 카테고리 가져오기
-            const categoryButtons = document.querySelectorAll('.category-button');
-            const menuItems = document.querySelectorAll('.menu-item');
+<!-- 카테고리 선택 후 메뉴 -->
+<div class="container1">
+    <div class="tab-content" id="myTabContent">
 
-            // 모든 메뉴 아이템을 숨김
-            menuItems.forEach(item => {
-                item.style.display = 'none';
-            });
+        <!-- 전체 탭 메뉴 버튼 -->
+        <div class="tab-pane show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <ul class="cardUl">
+            {% for m in menus %}
+            <a href="{% url 'cart' %}" id="mod_menu_url">
+                <div class="card text-center" style="width: 113px;">
+                    <div class="img">
+                        <img src="{% static 'americanoImg.png' %}" class="card-img-top" alt="menu_img" id="menu_img">
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ m.name }}</p>
+                    <p class="card-text price">{{ m.price }}원</p>
+                    </div>
+                </div>
+            </a>
+              {% endfor %}
 
-            // 첫 번째 카테고리에 해당하는 메뉴 아이템을 표시
-            const firstCategoryMenus = document.querySelectorAll('.menu-item[data-category="' + firstCategory + '"]');
-            firstCategoryMenus.forEach(item => {
-                item.style.display = 'block';
-            });
+              <!-- 메뉴추가 버튼 -->
+              <a href="{% url 'cart' %}" id="add_menu_url">
+              <div class="card text-center" style="width: 113px;">
+                <div class="img">
+                    <i class="fas fa-light fa-circle-plus fa-3x img" style="color: #e38f11;"></i>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">메뉴 추가</h5>
+                </div>
+              </div>
+            </a>
+            </ul>
+        </div>
+        
+        <!-- 사용자정의 탭 메뉴 버튼 -->
+        {% for c in categories %}
+            <div class="tab-pane" id="{{ c.name }}" role="tabpanel" aria-labelledby="{{ c.name }}-tab">
+                <ul class="cardUl">
+                {% for m in menus %}
+                    {% if m.categoryId == c %}
+                        <a href="{% url 'cart' %}" id="mod_menu_url">
+                            <div class="card text-center" style="width: 113px;">
+                                <div class="img">
+                                    <img src="{% static 'americanoImg.png' %}" class="card-img-top" alt="menu_img" id="menu_img">
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">{{ m.name }}</p>
+                                    <p class="card-text price">{{ m.price }}원</p>
+                                </div>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
 
-            // 카테고리 버튼을 클릭할 때 실행되는 함수
-            categoryButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const category = button.dataset.category;
-                    // 해당 카테고리의 메뉴만 표시
-                    menuItems.forEach(item => {
-                        if (item.dataset.category === category) {
-                            item.style.display = 'block';
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
-                });
-            });
-
-            menuItems.forEach(menuButton => {
-                menuButton.addEventListener('click', () => {
-                    const menuId = menuButton.dataset.menuId;
-                    window.location.href = `/menu/${menuId}/`;
-                });
-            });
-
-
-
-        });
-    </script>
-
-    <style>
-        .menu_background {
-
-        }
-
-        #categoryList {
-            display: flex;
-            justify-content: space-around; /* 카테고리 버튼들을 가로로 균등하게 배치 */
-            align-items: center;  /*카테고리 버튼들을 수직 가운데 정렬 */
-            padding: 10px 0; /* 상하 여백 조절 */
-            background-color: rgb(256,256,256);
-            width: 100%;
-        }
-
-        .category-button {
-            cursor: pointer;
-            background-color: transparent;
-            border: none;
-            padding: 0;
-            font-size: 16px;
-        }
-
-        .category-button:focus {
-            border-bottom: 2px solid blue;
-            outline: none;
-
-        }
-
-        .priceText {
-            color: red;
-            margin-top: 3px;
-        }
+                    <!-- 메뉴추가 버튼 -->
+                    <a href="{% url 'cart' %}" id="add_menu_url">
+                        <div class="card text-center" style="width: 113px;">
+                        <div class="img">
+                            <i class="fas fa-light fa-circle-plus fa-3x img" style="color: #e38f11;"></i>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">메뉴 추가</h5>
+                        </div>
+                        </div>
+                    </a>
+                </ul>
+            </div>
+        {% endfor %}
 
 
-        #menu-list {
-           /* margin-top: 20px;  카테고리 리스트와의 간격 조절 */
-           display: flex; /* 가로 방향으로 요소들을 배치 */
-            flex-wrap: wrap; /* 요소들이 넘칠 경우 다음 줄로 넘어가도록 설정 */
-            justify-content: left;
-        }
+    </div>    
+</div>
+  
 
-        .menu-item {
-            margin: 10px;
-            cursor: pointer;
-            background-color: white;
-            border: none;
-            border-radius: 10px;
-            width: 100px;
-            height: 119px;
-        }
-
-        .menuPagination {
-            background-color:white;
-            text-align: center;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            margin-top: 10px;
-        }
-    </style>
 
 {% endblock %}

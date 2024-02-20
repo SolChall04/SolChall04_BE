@@ -1,16 +1,20 @@
 import os
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from .models import Store, Menu, Option, OptionContent, Cart, Order
+from .models import Store, Menu, Option, OptionContent, Cart, Order, Category
 from django.db.models import Sum
 from google.cloud import speech_v1
 from google.oauth2 import service_account
 from django.http import JsonResponse
 from django.conf import settings
 from random import choice
+from django.http import JsonResponse
+
 
 # Create your views here.
 def landing(request):
@@ -22,25 +26,29 @@ def search_or_browse(request):
 def search(request):
     return render(request, 'kiosk/search.html', {})
 
-def menu(request):
-    items_per_page = 10
-    # Menu 모델에서 모든 메뉴를 가져옵니다.
-    all_menus = Menu.objects.all()
-    paginator = Paginator(all_menus, items_per_page)
-    page_number = request.GET.get('page', 1)
-    page_obj = paginator.get_page(page_number)
+def browse(request):
+    categories = Category.objects.all()
+    menus = Menu.objects.all()
 
-    # Menu 모델에서 모든 고유한 카테고리를 가져옵니다.
-    categories = Menu.objects.values_list('category', flat=True).distinct()
-
-    # 가장 작은 menuId를 가지고 있는 카테고리를 가져옵니다.
-    first_category = Menu.objects.order_by('menuId').first().category
-
-
-    return render(request, 'kiosk/menu.html',
-                  {'categories': categories, 'menus': page_obj, 'first_category': first_category})
+    return render(
+    request,
+    'kiosk/browse.html',
+    {
+        'categories' : categories,
+        'menus' : menus
+    }
+)
 
 def menu_options(request, menu_id):
+    # menu = Menu.objects.get(pk=menu_id)
+    #
+    # options_ids = menu.optionid.all()
+    #
+    # options = Option.objects.filter(pk__in=option_ids)
+    #
+    # #options = menu.option_set.all()
+    # return render(request, 'kiosk/option.html', {'menu': menu})
+
     # Retrieve the menu item based on the menu ID
     menu = Menu.objects.get(pk=menu_id)
     # Retrieve the option IDs associated with the menu item
@@ -140,10 +148,81 @@ def success(request):
     }
 )
 
+
+@csrf_exempt
+def delete(request):
+    if request.method == 'POST':
+        card_id = request.POST.get('card_id')
+        card = get_object_or_404(Cart, cartId=card_id)
+        card.delete()
+
+
+        carts = Cart.objects.all()
+        total_quantity = len(carts)
+        total_price = Cart.objects.aggregate(total_price=Sum('price'))['total_price']
+
+        data_and_message = {
+            'total_quantity' : total_quantity,
+            'total_price' : total_price,
+            'message' : '카트 삭제'
+        }
+
+        # 성공적으로 삭제되었다는 응답을 반환
+        return JsonResponse(data_and_message)
+
+    # POST 요청이 아닌 경우 에러 응답
+    return JsonResponse({'error': '올바르지 않은 요청입니다.'}, status=400)
+
+
+
+# test
+def login(request):
+
+    return render(
+    request,
+    'kiosk/login.html',
+    {
+    }
+)
+
+def signup(request):
+
+    return render(
+    request,
+    'kiosk/sign_up.html',
+    {
+    }
+)
+
+def admin_menu(request):
+    categories = Category.objects.all()
+    menus = Menu.objects.all()
+
+    return render(
+    request,
+    'kiosk/menu.html',
+    {
+        'categories' : categories,
+        'menus' : menus
+    }
+)
+
+def add(request):
+    categories = Category.objects.all()
+
+    return render(
+    request,
+    'kiosk/add_menu.html',
+    {
+        'categories' : categories,
+    }
+)
 def add_to_cart(request):
     if request.method == 'POST':
         menu_id = request.POST.get('menu_id')
-        selected_options = request.POST.getlist('selected_options[]')
+        selected_contents = request.POST.get('selected_content')
+        quantity = int(request.POST.get('quantity'))
+        price = int(request.POST.get('price'))
 
         # 메뉴 객체 가져오기
         menu = Menu.objects.get(pk=menu_id)
@@ -152,11 +231,12 @@ def add_to_cart(request):
         selected_contents = OptionContent.objects.filter(content__in=selected_options)
 
         # 장바구니에 추가
-        cart_item = Cart.objects.create(
-            menuId=menu,
-            price=menu.price,
-            options=', '.join(selected_options)
-        )
+        for i in range(quantity):
+            Cart.objects.create(
+                menuId=menu,
+                price=price,
+                options=selected_contents,
+            )
 
         return JsonResponse({'success': True})
     else:

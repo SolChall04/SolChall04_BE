@@ -8,12 +8,19 @@ class Store(AbstractUser) :
     class Meta:
         verbose_name = 'Store'
 
+class Category(models.Model):
+    categoryId = models.BigAutoField(primary_key=True)
+    name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return f'{self.name}'
+
 class Menu(models.Model):
     menuId = models.BigAutoField(primary_key=True)
     storeId = models.ForeignKey(Store, on_delete=models.CASCADE)
-    category = models.CharField(max_length=100)
+    categoryId = models.ForeignKey(Category, on_delete=models.RESTRICT, null=True)
     name = models.CharField(max_length=255)
-    optionId = models.ManyToManyField('Option')
+    optionId = models.ManyToManyField('Option', blank=True)
     price = models.IntegerField()
     menuImgUrl = models.TextField(null=True, blank=True)
     status = models.IntegerField(default=1)
@@ -27,7 +34,6 @@ class Option(models.Model):
     option = models.CharField(max_length=255)
     contents = models.ManyToManyField('OptionContent', blank=True)
     price = models.IntegerField()
-    quantity = models.IntegerField(default=1)
     status = models.IntegerField(default=1)
 
     def __str__(self):

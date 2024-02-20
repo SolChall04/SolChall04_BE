@@ -67,6 +67,7 @@ h2 {
 
 .right {
     text-align: right;
+    padding-right: 30px;
 }
 
 hr {
@@ -85,4 +86,10 @@ hr {
     border-color: #E38F11;
     color: black;
     width: 170px;
+}
+
+.empty {
+    text-align: center;
+    margin-top: 40px;
+    color: rgb(164, 164, 164);
 }
