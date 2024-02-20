@@ -34,7 +34,6 @@ class Option(models.Model):
     option = models.CharField(max_length=255)
     contents = models.ManyToManyField('OptionContent', blank=True)
     price = models.IntegerField()
-    quantity = models.IntegerField(default=1)
     status = models.IntegerField(default=1)
 
     def __str__(self):

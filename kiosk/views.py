@@ -160,20 +160,20 @@ def add(request):
 def add_to_cart(request):
     if request.method == 'POST':
         menu_id = request.POST.get('menu_id')
-        selected_options = request.POST.getlist('selected_options[]')
+        selected_contents = request.POST.get('selected_content')
+        quantity = int(request.POST.get('quantity'))
+        price = int(request.POST.get('price'))
 
         # 메뉴 객체 가져오기
         menu = Menu.objects.get(pk=menu_id)
 
-        # 선택된 옵션 내용 가져오기
-        selected_contents = OptionContent.objects.filter(content__in=selected_options)
-
         # 장바구니에 추가
-        cart_item = Cart.objects.create(
-            menuId=menu,
-            price=menu.price,
-            options=', '.join(selected_options)
-        )
+        for i in range(quantity): 
+            Cart.objects.create(
+                menuId=menu,
+                price=price,
+                options=selected_contents,
+            )
 
         return JsonResponse({'success': True})
     else:
