@@ -214,7 +214,7 @@
                 </div>
 
                 {% else %}
-                
+
                 <!-- contents가 없는 경우 -->
                 <div class="quantity-controls">
                     <div class="quantity-controls-txt" id="option_{{ option.optionId }}">
@@ -288,14 +288,14 @@
         decreaseButton.addEventListener('click', () => {
             min_quantity = 1;
             updateQuantity(quantityDisplay, 'quantity', 'decrease');
-            
+
         });
 
         increaseButton.addEventListener('click', () => {
             updateQuantity(quantityDisplay, 'quantity', 'increase');
         });
 
-        
+
 
         // ID가 다른 옵션의 수량을 각각 따로 계산
         const optionQuantityDisplays = document.querySelectorAll('.option-quantity-input');
@@ -322,9 +322,9 @@
 
             decreaseButton.addEventListener('click', () => {
                 updateQuantity(display, `option-quantity-${optionId}`, 'decrease');
-                
+
                 // 추가 금액이 있는 수량 옵션에 대한 가격 변경(-)
-                
+
 
                 if(priceInput.value > dp){
                     defaultPrice -= plus_or_minus_Price;
@@ -380,9 +380,9 @@
                     const selectedValue = selectedRadio.value;
                     console.log(`선택된 값: ${selectedValue}`);
 
-                    
+
                     optionText += optionNameValue + ": " + selectedValue + '\n';
-                    
+
                     // 추가 금액이 있는 라디오 버튼 옵션에 대한 가격 변경(+)
                     defaultPrice += newPrice;
                     priceInput.value = defaultPrice;
@@ -408,7 +408,7 @@
                 const no_quantityValue = no_optionContent.value
 
 
-                    
+
                 optionText += no_optionNameValue + ": " + no_quantityValue + '\n';
             })
 
