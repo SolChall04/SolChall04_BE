@@ -85,6 +85,10 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
+    window.onload = function(){
+            if (location.href.indexOf('reloaded')==-1) location.replace(location.href+'?reloaded');
+            //if (parent.location.href.indexOf('reloaded')==-1) parent.location.replace(parent.location.href+'?reloaded');
+        }
         $(document).ready(function () {
             $('.del-btn').on('click', function () {
                 var card = $(this).closest('#cd');
