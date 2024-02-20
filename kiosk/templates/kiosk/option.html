@@ -10,7 +10,7 @@
         }
 
         .OptionSelectTxt {
-            font-size:30px;
+            font-size:25px;
         }
 
         .option-box {
@@ -55,6 +55,8 @@
         .content-btn.selected {
             background-color: #F3A228;
         }
+
+
         .optionDetailImg {
             width:375px;
             height:250px;
@@ -78,6 +80,45 @@
             font-weight:600;
         }
 
+        .quantity-controls {
+            display: flex;
+            width: 100%;
+        }
+        #quantity-display {
+            border: 0px;
+            background-color: #E9ECEF;
+            font-size:15px;
+        }
+        .quantity-controls-txt {
+            display: flex;
+            border: 0px;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #E9ECEF;
+            font-size:20px;
+            weight: 80%;
+        }
+        .quantity-controls-buttons {
+            display: flex;
+            justify-content: space-around;
+            align-items:center;
+            weight: 20%;
+        }
+
+        .quantity-btn {
+            display: flex;
+            justify-content: space-around;
+            border: 0px;
+            border-radius: 5px;
+            background-color: #A9A9A9;
+            width:25px;
+            height:25px;
+            font-size: 20px;
+            margin-left: 15px;
+        }
+
+
     </style>
 </head>
 </head>
@@ -91,22 +132,36 @@
         {% csrf_token %}
         <input type="hidden" name="menu_id" value="{{ menu.pk }}">
         <input type="hidden" name="selected_content" id="selected-content" value="">
+        <input type="hidden" name="quantity" id="quantity" value="1">
 
         {% for option in options %}
             <div class="option-box">
                 <p class="optionName">{{ option.option }} </p>
                 {% if option.contents.all %}
                     <div class="content-boxes">
-                        {% for content in option.contents.all %}
-                            <label class="content-btn">
-
-                                {{ content.content }} {{ content.price }}
-                            </label>
-                        {% endfor %}
+                    {% for content in option.contents.all %}
+                        <label class="content-btn">
+                            <input type="radio" name="option_{{ option.optionId }}" value="{{ content.content }}">
+                            {{ content.content }} {{ content.price }}
+                        </label>
+                    {% endfor %}
                     </div>
                 {% endif %}
             </div>
         {% endfor %}
+
+        <div class="quantity-controls">
+            <div class="quantity-controls-txt">
+                수량 :
+                <input type="text" class="quantity-input" id="quantity-display" value="1" readonly>
+            </div>
+
+            <div class="quantity-controls-buttons">
+                <button type="button" class="quantity-btn" id="increase-quantity">+</button>
+                <button type="button" class="quantity-btn" id="decrease-quantity">-</button>
+            </div>
+        </div>
+
         <div class="option_threeButtons">
             <button type="reset" class="option_checkButton" onclick="history.back()">취소</button>
             <button type="submit" class="option_checkButton">담기</button>
@@ -118,22 +173,33 @@
         const contentButtons = document.querySelectorAll('.content-btn');
         const addToCartForm = document.getElementById('add-to-cart-form');
         const selectedContentInput = document.getElementById('selected-content');
+        const quantityDisplay = document.getElementById('quantity-display');
+        const decreaseButton = document.getElementById('decrease-quantity');
+        const increaseButton = document.getElementById('increase-quantity');
 
-        // type 필드에 기본값 1을 추가
-        const typeInput = document.createElement('input');
-        typeInput.type = 'hidden';
-        typeInput.name = 'type';
-        typeInput.value = '1';
-        addToCartForm.appendChild(typeInput);
+        //수량감소
+        decreaseButton.addEventListener('click', () => {
+            let quantity = parseInt(quantityDisplay.value);
+            if (quantity > 1) {
+                quantity--;
+                quantityDisplay.value = quantity;
+                document.getElementById('quantity').value = quantity; // hidden 필드 업데이트
+            }
+        });
+
+    // 수량 증가 버튼 클릭
+    increaseButton.addEventListener('click', () => {
+        let quantity = parseInt(quantityDisplay.value);
+        quantity++;
+        quantityDisplay.value = quantity;
+        document.getElementById('quantity').value = quantity; // hidden 필드 업데이트
+    });
+
 
         contentButtons.forEach(button => {
             button.addEventListener('click', () => {
-                // 선택된 버튼의 클래스를 변경하여 스타일 적용
-                contentButtons.forEach(btn => btn.classList.remove('selected'));
-                button.classList.add('selected');
-
-                // 선택된 버튼의 값을 hidden 필드에 설정
-                selectedContentInput.value = button.value;
+            const selectedContent = button.querySelector('input[type="radio"]').value;
+            selectedContentInput.value = selectedContent;
             });
         });
 

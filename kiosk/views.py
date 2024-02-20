@@ -1,10 +1,16 @@
+import os
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from .models import Store, Menu, Option, OptionContent, Cart, Order
 from django.db.models import Sum
-
+from google.cloud import speech_v1
+from google.oauth2 import service_account
+from django.http import JsonResponse
+from django.conf import settings
+from random import choice
 
 # Create your views here.
 def landing(request):
@@ -30,23 +36,11 @@ def menu(request):
     # 가장 작은 menuId를 가지고 있는 카테고리를 가져옵니다.
     first_category = Menu.objects.order_by('menuId').first().category
 
-    # menu.html 템플릿에 카테고리 목록과 메뉴 목록을 전달합니다.
-    #return render(request, 'kiosk/menu.html', {'categories': categories, 'menus': menus})
-
 
     return render(request, 'kiosk/menu.html',
                   {'categories': categories, 'menus': page_obj, 'first_category': first_category})
 
 def menu_options(request, menu_id):
-    # menu = Menu.objects.get(pk=menu_id)
-    #
-    # options_ids = menu.optionid.all()
-    #
-    # options = Option.objects.filter(pk__in=option_ids)
-    #
-    # #options = menu.option_set.all()
-    # return render(request, 'kiosk/option.html', {'menu': menu})
-
     # Retrieve the menu item based on the menu ID
     menu = Menu.objects.get(pk=menu_id)
     # Retrieve the option IDs associated with the menu item
@@ -55,6 +49,58 @@ def menu_options(request, menu_id):
     options = Option.objects.filter(pk__in=option_ids)
 
     return render(request, 'kiosk/option.html', {'menu': menu, 'options': options})
+
+
+def convert_speech_to_text(request):
+
+    if request.method == 'POST':
+        # 클라이언트로부터 받은 음성 텍스트
+        audio_text = request.POST.get('audio_text')
+
+        # JSON 파일의 경로 설정
+        json_file_path = os.path.join(settings.BASE_DIR, 'kiosk', 'solutionproject-414810-6aa45c89e5cc.json')
+
+        # Google STT API 인증 정보
+        credentials = service_account.Credentials.from_service_account_file(json_file_path)
+
+
+        # Google STT 클라이언트 생성
+        client = speech_v1.SpeechClient(credentials=credentials)
+
+        # 음성 텍스트를 변환합니다.
+        response = client.recognize({
+            'config': {
+                'encoding': 'LINEAR16',
+                'sample_rate_hertz': 44100,
+                'language_code': 'ko-KR',
+            },
+            'audio': {
+                'content': audio_text,
+            }
+        })
+
+        # 변환된 텍스트를 추출합니다.
+        recognized_text = response.results[0].alternatives[0].transcript
+
+        recognized_text = recognized_text.rstrip('.')
+
+        return JsonResponse({'text': recognized_text})
+
+def get_menu_id(request):
+    if request.method == 'POST':
+        transcription = request.POST.get('transcription', '')
+        # Search for the Menu object based on the recognized text
+        try:
+            menus = Menu.objects.filter(name__icontains=transcription)
+            if menus.exists():
+                menu_ids = [menu.pk for menu in menus]
+                return JsonResponse({'menu_ids': menu_ids})
+            else:
+                return JsonResponse({'error': 'Menu not found'}, status=404)
+        except Menu.DoesNotExist:
+            return JsonResponse({'error': 'Menu not found'}, status=404)
+        else:
+            return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
 def cart(request):
