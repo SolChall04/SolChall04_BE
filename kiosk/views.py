@@ -227,9 +227,6 @@ def add_to_cart(request):
         # 메뉴 객체 가져오기
         menu = Menu.objects.get(pk=menu_id)
 
-        # 선택된 옵션 내용 가져오기
-        selected_contents = OptionContent.objects.filter(content__in=selected_options)
-
         # 장바구니에 추가
         for i in range(quantity):
             Cart.objects.create(
