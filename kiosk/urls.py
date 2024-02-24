@@ -10,10 +10,10 @@ urlpatterns = [
 
 
     # test
-    path('login/', views.login),
-    path('signup/', views.signup),
-    path('menu/', views.admin_menu),
-    path('menu/add', views.add),
+    path('login/', views.user_login, name='login'),
+    path('signup/', views.signup, name='signup'),
+    path('menu/', views.menu, name='menu'),
+    path('menu/add', views.add_menu, name='add_menu'),
 
 
     # AJAX
