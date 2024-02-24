@@ -40,7 +40,7 @@
                         <img src="{% static 'americanoImg.png' %}" class="card-img-top" alt="menu_img" id="menu_img">
                     </div>
                     <div class="card-body">
-                        <p class="card-text">{{ m.name }}</p>
+                        <p class="card-text">{{ m.name|truncatechars:6 }}</p>
                     <p class="card-text price">{{ m.price }}원</p>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                                     <img src="{% static 'americanoImg.png' %}" class="card-img-top" alt="menu_img" id="menu_img">
                                 </div>
                                 <div class="card-body">
-                                    <p class="card-text">{{ m.name }}</p>
+                                    <p class="card-text">{{ m.name|truncatechars:6 }}</p>
                                     <p class="card-text price">{{ m.price }}원</p>
                                 </div>
                             </div>

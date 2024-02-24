@@ -14,6 +14,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from random import choice
 from django.http import JsonResponse
+import json
 
 
 # Create your views here.
@@ -96,12 +97,15 @@ def convert_speech_to_text(request):
 
 def get_menu_id(request):
     if request.method == 'POST':
-        transcription = request.POST.get('transcription', '')
+        data = json.loads(request.body)
+        transcription = data.get('transcription', '').replace(" ", "")
+        print(f'Transcription received: {transcription}')
         # Search for the Menu object based on the recognized text
         try:
-            menus = Menu.objects.filter(name__icontains=transcription)
+            menus = Menu.objects.filter(name=transcription)
             if menus.exists():
-                menu_ids = [menu.pk for menu in menus]
+                menu_ids = menus.first().pk
+                print(menu_ids)
                 return JsonResponse({'menu_ids': menu_ids})
             else:
                 return JsonResponse({'error': 'Menu not found'}, status=404)
@@ -128,12 +132,17 @@ def cart(request):
 )
 
 def pay(request):
+    carts = Cart.objects.all()
+    total_price = 0
+
+    for c in carts:
+        total_price += c.price
 
     return render(
     request,
     'kiosk/pay.html',
     {
-
+        'total_price': total_price
     }
 )
 

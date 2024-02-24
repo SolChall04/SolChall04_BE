@@ -21,7 +21,7 @@ urlpatterns = [
 
 
     
-    path('', views.landing),
+    path('', views.landing, name='landing'),
     path('search_or_browse/', views.search_or_browse, name='search_or_browse'),
     path('search/', views.search, name='search'),
     path('browse/', views.browse, name='browse'),
